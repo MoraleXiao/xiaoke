@@ -1,0 +1,825 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>肖可老师的课堂小应用导航</title>
+    <meta
+      name="description"
+      content="六约学校肖可老师的课堂小应用导航页，收录适合课堂演示、互动练习与轻量创作的纯静态网页应用。"
+    />
+    <style>
+      :root {
+        --bg: #f6efe8;
+        --bg-soft: #fff8f3;
+        --paper: rgba(255, 251, 247, 0.82);
+        --paper-strong: rgba(255, 255, 255, 0.92);
+        --ink: #2f211d;
+        --muted: #6d5952;
+        --line: rgba(93, 61, 52, 0.12);
+        --accent: #e34b3f;
+        --accent-soft: #ff8d68;
+        --accent-gold: #ffcf7a;
+        --shadow: 0 22px 64px rgba(156, 90, 59, 0.16);
+        --radius-xl: 32px;
+        --radius-lg: 24px;
+        --radius-md: 18px;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        color: var(--ink);
+        font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+        background:
+          radial-gradient(circle at top left, rgba(255, 198, 170, 0.78), transparent 28%),
+          radial-gradient(circle at 88% 10%, rgba(255, 215, 144, 0.58), transparent 20%),
+          linear-gradient(180deg, #fbf6f0 0%, var(--bg) 50%, #f4ece4 100%);
+      }
+
+      body::before,
+      body::after {
+        content: "";
+        position: fixed;
+        inset: auto;
+        width: 280px;
+        height: 280px;
+        border-radius: 999px;
+        filter: blur(18px);
+        pointer-events: none;
+        z-index: 0;
+        opacity: 0.5;
+      }
+
+      body::before {
+        top: 90px;
+        right: -90px;
+        background: rgba(255, 152, 108, 0.26);
+      }
+
+      body::after {
+        bottom: 30px;
+        left: -90px;
+        background: rgba(255, 205, 122, 0.26);
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      code {
+        padding: 2px 8px;
+        border-radius: 999px;
+        font-family: "SFMono-Regular", "Consolas", "Liberation Mono", monospace;
+        font-size: 0.9em;
+        color: #8c3f31;
+        background: rgba(227, 75, 63, 0.08);
+      }
+
+      .page-shell {
+        position: relative;
+        z-index: 1;
+        width: min(1180px, calc(100% - 32px));
+        margin: 0 auto;
+        padding: 24px 0 56px;
+      }
+
+      .topbar {
+        position: sticky;
+        top: 16px;
+        z-index: 10;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 14px 18px;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        background: rgba(255, 250, 245, 0.8);
+        backdrop-filter: blur(18px);
+        box-shadow: 0 10px 30px rgba(140, 94, 76, 0.08);
+      }
+
+      .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        font-weight: 700;
+        letter-spacing: 0.02em;
+      }
+
+      .brand-mark {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        border-radius: 14px;
+        color: #fff;
+        background: linear-gradient(135deg, var(--accent) 0%, var(--accent-soft) 90%);
+        box-shadow: 0 14px 24px rgba(227, 75, 63, 0.28);
+      }
+
+      .topbar-nav {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .topbar-nav a {
+        padding: 10px 14px;
+        border-radius: 999px;
+        color: var(--muted);
+        transition: transform 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+      }
+
+      .topbar-nav a:hover,
+      .topbar-nav a:focus-visible {
+        color: var(--accent);
+        background: rgba(227, 75, 63, 0.08);
+        transform: translateY(-1px);
+      }
+
+      .hero {
+        display: grid;
+        grid-template-columns: minmax(0, 1.25fr) minmax(300px, 0.75fr);
+        gap: 24px;
+        margin-top: 24px;
+      }
+
+      .panel {
+        border: 1px solid var(--line);
+        border-radius: var(--radius-xl);
+        background: var(--paper);
+        backdrop-filter: blur(24px);
+        box-shadow: var(--shadow);
+      }
+
+      .hero-copy {
+        padding: 34px;
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 12px;
+        border-radius: 999px;
+        color: var(--accent);
+        font-size: 0.9rem;
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        background: rgba(227, 75, 63, 0.1);
+      }
+
+      .hero-copy h1,
+      .section-head h2,
+      .profile-card h2,
+      .maintenance h2 {
+        margin: 18px 0 14px;
+        font-family: "STZhongsong", "Songti SC", "Noto Serif SC", serif;
+        font-weight: 700;
+        letter-spacing: 0.02em;
+      }
+
+      .hero-copy h1 {
+        font-size: clamp(2.7rem, 5.2vw, 4.9rem);
+        line-height: 1.08;
+      }
+
+      .hero-copy p {
+        margin: 0;
+        max-width: 760px;
+        color: var(--muted);
+        font-size: 1.05rem;
+        line-height: 1.85;
+      }
+
+      .hero-copy p + p {
+        margin-top: 14px;
+      }
+
+      .hero-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 14px;
+        margin-top: 28px;
+      }
+
+      .button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        min-height: 48px;
+        padding: 0 18px;
+        border: 1px solid transparent;
+        border-radius: 999px;
+        font-weight: 700;
+        transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease,
+          background-color 0.2s ease;
+      }
+
+      .button:hover,
+      .button:focus-visible {
+        transform: translateY(-2px);
+      }
+
+      .button-primary {
+        color: #fff;
+        background: linear-gradient(135deg, var(--accent) 0%, var(--accent-soft) 90%);
+        box-shadow: 0 16px 30px rgba(227, 75, 63, 0.28);
+      }
+
+      .button-secondary {
+        color: var(--ink);
+        border-color: rgba(93, 61, 52, 0.12);
+        background: rgba(255, 255, 255, 0.75);
+      }
+
+      .hero-side {
+        display: grid;
+        gap: 24px;
+      }
+
+      .profile-card,
+      .stats-card,
+      .quick-links,
+      .apps-section,
+      .maintenance {
+        padding: 28px;
+      }
+
+      .profile-card {
+        display: grid;
+        gap: 18px;
+      }
+
+      .teacher-mark {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 72px;
+        height: 72px;
+        border-radius: 22px;
+        color: #fff;
+        font-size: 1.35rem;
+        font-weight: 800;
+        background:
+          linear-gradient(160deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0)),
+          linear-gradient(135deg, #ff7d62 0%, #e34b3f 56%, #c53c35 100%);
+        box-shadow: 0 18px 34px rgba(227, 75, 63, 0.28);
+      }
+
+      .profile-card h2 {
+        font-size: 2rem;
+        margin-bottom: 8px;
+      }
+
+      .profile-card p {
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.8;
+      }
+
+      .profile-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .profile-tags span,
+      .app-tags span,
+      .quick-chip small,
+      .cover-badge,
+      .card-status {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 7px 12px;
+        border-radius: 999px;
+        font-size: 0.82rem;
+        font-weight: 700;
+      }
+
+      .profile-tags span {
+        color: var(--accent);
+        background: rgba(227, 75, 63, 0.08);
+      }
+
+      .stats-card {
+        display: grid;
+        gap: 14px;
+      }
+
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px;
+      }
+
+      .stat-item {
+        padding: 18px;
+        border-radius: 20px;
+        background: rgba(255, 255, 255, 0.72);
+        border: 1px solid rgba(93, 61, 52, 0.08);
+      }
+
+      .stat-item strong {
+        display: block;
+        margin-bottom: 6px;
+        font-size: 1.9rem;
+        line-height: 1;
+      }
+
+      .stat-item span {
+        color: var(--muted);
+        font-size: 0.92rem;
+      }
+
+      .section-head {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 20px;
+      }
+
+      .section-head h2 {
+        font-size: clamp(1.8rem, 3vw, 2.4rem);
+      }
+
+      .section-head p,
+      .maintenance-copy,
+      .stats-card p {
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.8;
+      }
+
+      .quick-links {
+        margin-top: 24px;
+      }
+
+      .quick-links-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+
+      .quick-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 14px 16px;
+        border: 1px solid rgba(93, 61, 52, 0.08);
+        border-radius: 20px;
+        background: var(--paper-strong);
+        transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+      }
+
+      .quick-chip:hover,
+      .quick-chip:focus-visible {
+        transform: translateY(-2px);
+        border-color: rgba(227, 75, 63, 0.18);
+        box-shadow: 0 14px 30px rgba(156, 90, 59, 0.12);
+      }
+
+      .quick-chip strong {
+        font-size: 0.98rem;
+      }
+
+      .quick-chip small {
+        color: var(--accent);
+        background: rgba(227, 75, 63, 0.08);
+      }
+
+      .apps-section {
+        margin-top: 24px;
+      }
+
+      .apps-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 18px;
+      }
+
+      .app-card {
+        overflow: hidden;
+        border: 1px solid rgba(93, 61, 52, 0.08);
+        border-radius: 28px;
+        background: var(--paper-strong);
+        box-shadow: 0 18px 36px rgba(156, 90, 59, 0.12);
+      }
+
+      .card-cover {
+        position: relative;
+        min-height: 230px;
+        padding: 22px;
+        color: #fff8f0;
+        background:
+          radial-gradient(circle at 20% 25%, rgba(255, 255, 255, 0.26), transparent 22%),
+          radial-gradient(circle at 82% 18%, rgba(255, 215, 164, 0.36), transparent 18%),
+          linear-gradient(160deg, #ff9363 0%, #e34b3f 52%, #b93731 100%);
+      }
+
+      .card-cover::before,
+      .card-cover::after {
+        content: "";
+        position: absolute;
+        border-radius: 999px;
+        opacity: 0.75;
+      }
+
+      .card-cover::before {
+        right: -26px;
+        bottom: 28px;
+        width: 140px;
+        height: 140px;
+        border: 18px solid rgba(255, 255, 255, 0.16);
+      }
+
+      .card-cover::after {
+        top: 24px;
+        right: 34px;
+        width: 66px;
+        height: 66px;
+        background: rgba(255, 255, 255, 0.16);
+      }
+
+      .cover-badge {
+        position: relative;
+        z-index: 1;
+        color: #fff;
+        background: rgba(255, 255, 255, 0.18);
+        backdrop-filter: blur(8px);
+      }
+
+      .cover-title {
+        position: relative;
+        z-index: 1;
+        margin-top: 64px;
+        font-family: "STZhongsong", "Songti SC", "Noto Serif SC", serif;
+        font-size: 2rem;
+        line-height: 1.2;
+      }
+
+      .cover-copy {
+        position: relative;
+        z-index: 1;
+        max-width: 260px;
+        margin-top: 14px;
+        color: rgba(255, 248, 240, 0.88);
+        line-height: 1.7;
+      }
+
+      .card-body {
+        padding: 22px;
+      }
+
+      .card-head {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 16px;
+      }
+
+      .card-head h3 {
+        margin: 0;
+        font-size: 1.4rem;
+      }
+
+      .card-path,
+      .card-summary,
+      .card-scene {
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.8;
+      }
+
+      .card-summary {
+        margin-top: 14px;
+      }
+
+      .card-scene {
+        margin-top: 12px;
+      }
+
+      .card-status {
+        color: var(--accent);
+        background: rgba(227, 75, 63, 0.08);
+        white-space: nowrap;
+      }
+
+      .app-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 18px;
+      }
+
+      .app-tags span {
+        color: #7a4f40;
+        background: #f9efe5;
+      }
+
+      .card-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 20px;
+      }
+
+      .maintenance {
+        display: grid;
+        gap: 18px;
+        margin-top: 24px;
+      }
+
+      .maintenance h2 {
+        font-size: clamp(1.8rem, 3vw, 2.3rem);
+      }
+
+      .maintenance-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 14px;
+      }
+
+      .maintenance-item {
+        padding: 18px;
+        border-radius: 20px;
+        border: 1px solid rgba(93, 61, 52, 0.08);
+        background: rgba(255, 255, 255, 0.72);
+      }
+
+      .maintenance-item strong {
+        display: block;
+        margin-bottom: 8px;
+      }
+
+      .maintenance-item p {
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.8;
+      }
+
+      .site-foot {
+        margin-top: 22px;
+        padding: 0 6px;
+        color: var(--muted);
+        font-size: 0.95rem;
+      }
+
+      @media (max-width: 960px) {
+        .hero {
+          grid-template-columns: 1fr;
+        }
+
+        .stats-grid {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+      }
+
+      @media (max-width: 720px) {
+        .page-shell {
+          width: min(100% - 20px, 100%);
+          padding-top: 14px;
+        }
+
+        .topbar {
+          position: static;
+          padding: 14px;
+          border-radius: 24px;
+        }
+
+        .hero-copy,
+        .profile-card,
+        .stats-card,
+        .quick-links,
+        .apps-section,
+        .maintenance {
+          padding: 22px;
+        }
+
+        .hero-copy h1 {
+          font-size: 2.4rem;
+        }
+
+        .stats-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .section-head {
+          align-items: flex-start;
+          flex-direction: column;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="topbar" aria-label="站点导航">
+        <a class="brand" href="./">
+          <span class="brand-mark" aria-hidden="true">肖</span>
+          <span>肖可老师的课堂小应用</span>
+        </a>
+        <nav class="topbar-nav">
+          <a href="#about">首页介绍</a>
+          <a href="#apps">应用直达</a>
+          <a href="#maintenance">维护说明</a>
+        </nav>
+      </header>
+
+      <main>
+        <section class="hero" id="about">
+          <article class="hero-copy panel">
+            <span class="eyebrow">LIUYUE SCHOOL · TEACHING LAB</span>
+            <h1>把课堂里的想法，做成打开就能用的小应用。</h1>
+            <p>
+              我是六约学校的肖可老师，平时会把课堂里常用的讲解工具、互动练习和创意活动，整理成简洁、直接、可立刻上手的网页小应用。
+            </p>
+            <p>
+              这个导航页像一张课堂工作台：既方便我课前快速进入需要的工具，也方便学生在演示、练习和动手探索时，第一时间找到合适的入口。
+            </p>
+            <div class="hero-actions">
+              <a class="button button-primary" href="#apps">查看全部应用</a>
+              <a class="button button-secondary" href="tangram-studio/">直接进入七巧板创作台</a>
+            </div>
+          </article>
+
+          <div class="hero-side">
+            <aside class="profile-card panel">
+              <span class="teacher-mark" aria-hidden="true">肖可</span>
+              <div>
+                <h2>简单、直观、适合课堂</h2>
+                <p>
+                  这里收录的小应用优先服务课堂真实场景：打开即用、无需安装、便于投屏展示，也适合学生在平板或手机上快速参与互动。
+                </p>
+              </div>
+              <div class="profile-tags" aria-label="特点">
+                <span>课堂演示</span>
+                <span>互动练习</span>
+                <span>轻量创作</span>
+                <span>GitHub Pages</span>
+              </div>
+            </aside>
+
+            <aside class="stats-card panel" aria-label="站点概览">
+              <div class="section-head">
+                <div>
+                  <span class="eyebrow">站点概览</span>
+                  <h2>一眼就能找到入口</h2>
+                </div>
+              </div>
+              <p>导航页会集中展示所有课堂应用的简介、路径和状态，减少课前翻找时间。</p>
+              <div class="stats-grid">
+                <div class="stat-item">
+                  <strong id="app-count">0</strong>
+                  <span>已收录应用</span>
+                </div>
+                <div class="stat-item">
+                  <strong id="available-count">0</strong>
+                  <span>当前可用</span>
+                </div>
+                <div class="stat-item">
+                  <strong>静态</strong>
+                  <span>部署方式</span>
+                </div>
+                <div class="stat-item">
+                  <strong>课堂</strong>
+                  <span>核心场景</span>
+                </div>
+              </div>
+            </aside>
+          </div>
+        </section>
+
+        <section class="quick-links panel">
+          <div class="section-head">
+            <div>
+              <span class="eyebrow">快速直达</span>
+              <h2>点击卡片前，先看这里</h2>
+            </div>
+            <p>每个入口都会直接跳到对应应用目录，适合课堂上快速切换。</p>
+          </div>
+          <div id="quick-links-list" class="quick-links-list"></div>
+        </section>
+
+        <section class="apps-section panel" id="apps">
+          <div class="section-head">
+            <div>
+              <span class="eyebrow">应用导航</span>
+              <h2>当前可用的小应用</h2>
+            </div>
+            <p>后续新增应用时，请同步更新本页卡片与 README 中的应用列表。</p>
+          </div>
+          <div id="apps-grid" class="apps-grid"></div>
+        </section>
+
+        <section class="maintenance panel" id="maintenance">
+          <span class="eyebrow">维护说明</span>
+          <h2>新增应用时，记得同步维护这三处</h2>
+          <p class="maintenance-copy">
+            为了保证 GitHub Pages 首页、仓库文档和应用入口始终一致，后续每新增、修改或下线一个应用，都要同步更新导航页和说明文档。
+          </p>
+          <div class="maintenance-grid">
+            <div class="maintenance-item">
+              <strong>1. 更新导航页</strong>
+              <p>在根目录 <code>index.html</code> 中补充应用数据，让首页卡片、统计和快速入口保持最新。</p>
+            </div>
+            <div class="maintenance-item">
+              <strong>2. 更新 README</strong>
+              <p>补充应用名称、目录、功能说明、Pages 路径和当前状态，便于仓库协作与检索。</p>
+            </div>
+            <div class="maintenance-item">
+              <strong>3. 核对路径</strong>
+              <p>确认链接、资源路径和目录结构都适配 GitHub Pages 子路径部署，再提交变更。</p>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer class="site-foot">
+        本页为仓库首页导航。应用均采用相对路径跳转，适配 GitHub Pages 项目页部署。
+      </footer>
+    </div>
+
+    <script>
+      // 新增应用时，请同步更新这里、README.md 和 AGENTS.md 中的相关说明。
+      const apps = [
+        {
+          name: "七巧板创作台",
+          slug: "tangram-studio/",
+          status: "可用",
+          badge: "推荐课堂演示",
+          summary:
+            "左侧选择七巧板组件和模板，右侧进行拖拽拼搭，支持旋转、翻面、模板吸附与一键示范。",
+          scene: "适合几何启蒙、空间想象训练、图形拼搭活动和课堂投屏演示。",
+          tags: ["拖拽拼搭", "模板示范", "吸附引导"]
+        }
+      ];
+
+      const appCount = document.getElementById("app-count");
+      const availableCount = document.getElementById("available-count");
+      const quickLinksList = document.getElementById("quick-links-list");
+      const appsGrid = document.getElementById("apps-grid");
+
+      const usableApps = apps.filter((app) => app.status === "可用");
+      appCount.textContent = String(apps.length);
+      availableCount.textContent = String(usableApps.length);
+
+      quickLinksList.innerHTML = apps
+        .map(
+          (app) => `
+            <a class="quick-chip" href="${app.slug}">
+              <strong>${app.name}</strong>
+              <small>${app.status}</small>
+            </a>
+          `
+        )
+        .join("");
+
+      appsGrid.innerHTML = apps
+        .map(
+          (app) => `
+            <article class="app-card">
+              <div class="card-cover">
+                <span class="cover-badge">${app.badge}</span>
+                <div class="cover-title">${app.name}</div>
+                <p class="cover-copy">打开就能进入课堂场景，减少切换成本，让演示与练习更顺手。</p>
+              </div>
+              <div class="card-body">
+                <div class="card-head">
+                  <div>
+                    <h3>${app.name}</h3>
+                    <p class="card-path">目录路径：${app.slug}</p>
+                  </div>
+                  <span class="card-status">${app.status}</span>
+                </div>
+                <p class="card-summary">${app.summary}</p>
+                <p class="card-scene">${app.scene}</p>
+                <div class="app-tags">
+                  ${app.tags.map((tag) => `<span>${tag}</span>`).join("")}
+                </div>
+                <div class="card-actions">
+                  <a class="button button-primary" href="${app.slug}">进入应用</a>
+                  <a class="button button-secondary" href="#maintenance">查看维护规则</a>
+                </div>
+              </div>
+            </article>
+          `
+        )
+        .join("");
+    </script>
+  </body>
+</html>
