@@ -80,7 +80,7 @@
 
 | 应用名称 | 目录 | 功能说明 | Pages 路径 | 状态 |
 | --- | --- | --- | --- | --- |
-| Making Art with Shapes | `making-art-with-shapes/` | 左侧分为核心图形与拓展图形，支持重复添加、自由配色、拖拽移动、旋转与放大缩小，方便学生进行图形创作 | `https://moralexiao.github.io/xiaoke/making-art-with-shapes/` | 可用 |
+| Making Art with Shapes | `making-art-with-shapes/` | 采用更紧凑的 iPad 友好布局，在第一屏集中展示核心图形、拓展图形与颜色选择，并提供更大的创作画布 | `https://moralexiao.github.io/xiaoke/making-art-with-shapes/` | 可用 |
 
 ## 维护流程
 

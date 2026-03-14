@@ -367,7 +367,7 @@ function renderInspector() {
   selectedBadge.textContent = definition.label;
   selectedBadge.classList.remove("is-idle");
   selectedName.textContent = `${definition.label} · ${definition.chinese}`;
-  selectedMeta.textContent = `编号：${instance.serial} · 颜色：${instance.color.toUpperCase()} · 大小：${Math.round(
+  selectedMeta.textContent = `颜色：${instance.color.toUpperCase()} · 大小：${Math.round(
     instance.scale * 100,
   )}% · 角度：${normalizeAngle(instance.rotation)}°`;
   selectedColorDot.style.background = instance.color;
@@ -392,19 +392,17 @@ function renderStats() {
 
 function buildShapeCard(shape) {
   return `
-    <article class="shape-card">
-      <div class="shape-preview">${buildShapePreview(shape)}</div>
-      <div class="shape-meta">
-        <div class="shape-title-row">
-          <strong>${shape.label}</strong>
-          <span class="shape-chip">${shape.chinese}</span>
-        </div>
-        <p>${shape.description}</p>
-      </div>
-      <div class="shape-controls">
-        <button class="shape-add-button" type="button" data-add-shape="${shape.id}">添加图形</button>
-      </div>
-    </article>
+    <button
+      class="shape-card"
+      type="button"
+      data-add-shape="${shape.id}"
+      title="${shape.label} · ${shape.chinese}：${shape.description}"
+      aria-label="添加 ${shape.label} ${shape.chinese}"
+    >
+      <span class="shape-preview">${buildShapePreview(shape)}</span>
+      <span class="shape-label">${shape.label}</span>
+      <span class="shape-sub">${shape.chinese}</span>
+    </button>
   `;
 }
 

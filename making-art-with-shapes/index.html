@@ -6,7 +6,7 @@
     <title>Making Art with Shapes</title>
     <meta
       name="description"
-      content="一个适合课堂教学的图形创作应用，支持核心图形、拓展图形、重复添加、拖拽摆放、放大缩小和颜色选择。"
+      content="一个适合课堂教学与 iPad 创作的图形应用，提供紧凑的第一屏图形选择区和更大的创作画布。"
     />
     <link rel="stylesheet" href="style.css" />
   </head>
@@ -15,11 +15,9 @@
       <header class="hero">
         <div class="hero-copy">
           <span class="eyebrow">Making Art with Shapes</span>
-          <h1>用图形来创作</h1>
+          <h1>用图形快速创作</h1>
           <p>
-            围绕课本中的 <strong>circle</strong>、<strong>triangle</strong>、<strong>square</strong>、<strong>rectangle</strong>、<strong>star</strong>
-            五个核心词汇展开创作，也可以继续加入 <strong>oval</strong>、<strong>diamond</strong>
-            等拓展图形。每个图形都能重复添加、自由配色、拖动摆放，还能放大缩小，方便学生完成树、房子、动物和节日主题图画。
+            为 iPad 课堂创作做了紧凑布局优化：上方直接选图形和颜色，下方保留更大的创作区，让学生尽量在第一屏内完成选择与拼搭。
           </p>
         </div>
         <div class="hero-stats" aria-label="创作统计">
@@ -38,71 +36,13 @@
         </div>
       </header>
 
-      <main class="layout">
-        <aside class="sidebar">
-          <section class="panel">
-            <div class="panel-head compact">
-              <div>
-                <span class="panel-kicker">Core Shapes</span>
-                <h2>核心图形</h2>
-              </div>
-              <span class="section-note">课本 5 个关键词</span>
-            </div>
-            <div id="core-shape-list" class="shape-list"></div>
-          </section>
-
-          <section class="panel">
-            <div class="panel-head compact">
-              <div>
-                <span class="panel-kicker">Extra Shapes</span>
-                <h2>拓展图形</h2>
-              </div>
-              <span class="section-note">让作品更丰富</span>
-            </div>
-            <div id="extra-shape-list" class="shape-list"></div>
-          </section>
-
-          <section class="panel color-panel">
-            <div class="panel-head compact">
-              <div>
-                <span class="panel-kicker">Color Studio</span>
-                <h2>颜色选择</h2>
-              </div>
-            </div>
-            <p class="panel-text">
-              先选择颜色，再添加图形；如果已经选中了画布里的图形，切换颜色会立即为它改色。
-            </p>
-            <div id="palette" class="palette" aria-label="颜色面板"></div>
-            <label class="color-picker-row" for="custom-color">
-              <span>自定义颜色</span>
-              <input id="custom-color" type="color" value="#ff6b6b" />
-            </label>
-          </section>
-
-          <section class="panel tip-panel">
-            <div class="panel-head compact">
-              <div>
-                <span class="panel-kicker">Class Tips</span>
-                <h2>课堂使用建议</h2>
-              </div>
-            </div>
-            <ul class="tips-list">
-              <li>同一个图形可以重复添加，例如用多个 triangle 拼出圣诞树。</li>
-              <li>先选颜色再添加，会更像在“拿彩色积木”进行创作。</li>
-              <li>选中图形后可放大缩小，做出大圆、小圆和不同层次。</li>
-              <li>键盘也可微调：方向键移动，<kbd>R</kbd> 旋转，<kbd>+</kbd>/<kbd>-</kbd> 缩放。</li>
-            </ul>
-          </section>
-        </aside>
-
+      <main class="studio">
         <section class="workspace-card">
-          <div class="workspace-head">
-            <div>
-              <span class="panel-kicker">Creative Area</span>
-              <h2>主要创作区</h2>
-              <p class="workspace-caption">
-                试着组合不同的图形与颜色，创作树、机器人、房子、鱼、火箭、礼物盒等图画。
-              </p>
+          <div class="stage-top">
+            <div class="stage-copy">
+              <span class="panel-kicker">iPad Friendly Studio</span>
+              <h2>第一屏就开始创作</h2>
+              <p>添加图形 → 选颜色 → 拖进画布，尽量少滑动、少切换、更多创作。</p>
             </div>
             <div class="toolbar">
               <button id="scatter-shapes" class="secondary-button" type="button">整理位置</button>
@@ -111,10 +51,49 @@
             </div>
           </div>
 
-          <div class="workspace-shell">
+          <div class="control-hub">
+            <section class="control-section control-section-wide">
+              <div class="control-head">
+                <div>
+                  <span class="panel-kicker">Core Shapes</span>
+                  <h3>核心图形</h3>
+                </div>
+                <span class="control-note">课本 5 个词汇</span>
+              </div>
+              <div id="core-shape-list" class="shape-list"></div>
+            </section>
+
+            <section class="control-section control-section-wide">
+              <div class="control-head">
+                <div>
+                  <span class="panel-kicker">Extra Shapes</span>
+                  <h3>拓展图形</h3>
+                </div>
+                <span class="control-note">补充创意表达</span>
+              </div>
+              <div id="extra-shape-list" class="shape-list extra-shape-list"></div>
+            </section>
+
+            <section class="control-section color-section">
+              <div class="control-head">
+                <div>
+                  <span class="panel-kicker">Colors</span>
+                  <h3>颜色选择</h3>
+                </div>
+                <span class="control-note">选中图形后可直接改色</span>
+              </div>
+              <div id="palette" class="palette" aria-label="颜色面板"></div>
+              <label class="color-picker-row" for="custom-color">
+                <span>自定义</span>
+                <input id="custom-color" type="color" value="#ff6b6b" />
+              </label>
+            </section>
+          </div>
+
+          <div class="board-stage">
             <div id="board" class="board">
               <div id="board-empty" class="board-empty">
-                <span>从左侧添加图形到这里，开始制作你的 shape art</span>
+                <span>从上方添加图形到这里，开始制作你的 shape art</span>
               </div>
               <svg
                 id="board-svg"
@@ -133,7 +112,7 @@
                 <span id="selected-badge" class="selected-badge is-idle">未选择</span>
               </div>
               <div id="inspector-empty" class="selected-empty">
-                点击创作区中的图形后，可以放大、缩小、旋转、复制、删除和改色。
+                点击图形后，可缩放、旋转、复制、删除和改色。
               </div>
               <div id="inspector-card" class="selected-card" hidden>
                 <div class="selected-title-row">
@@ -155,8 +134,6 @@
                   <button type="button" data-action="rotate-left">左转</button>
                   <button type="button" data-action="rotate-right">右转</button>
                   <button type="button" data-action="duplicate">复制</button>
-                  <button type="button" data-action="bring-front">置于最前</button>
-                  <button type="button" data-action="center">移到中间</button>
                   <button type="button" data-action="delete">删除</button>
                 </div>
               </div>
