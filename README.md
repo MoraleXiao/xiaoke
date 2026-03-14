@@ -80,7 +80,7 @@
 
 | 应用名称 | 目录 | 功能说明 | Pages 路径 | 状态 |
 | --- | --- | --- | --- | --- |
-| Making Art with Shapes | `making-art-with-shapes/` | 采用画布左侧最大化、右侧可收起编辑区的极简首屏布局，并保留宽高独立拉伸，适合 iPad 课堂快速创作 | `https://moralexiao.github.io/xiaoke/making-art-with-shapes/` | 可用 |
+| Making Art with Shapes | `making-art-with-shapes/` | 采用画布左侧最大化、右侧可收起编辑区的极简首屏布局，并新增半圆、梯形等拓展图形，适合 iPad 课堂快速创作 | `https://moralexiao.github.io/xiaoke/making-art-with-shapes/` | 可用 |
 
 ## 维护流程
 

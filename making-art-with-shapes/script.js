@@ -71,6 +71,22 @@ const SHAPE_DEFINITIONS = [
     type: "hexagon",
     description: "适合做蜂巢、徽章和科幻风格装饰。",
   },
+  {
+    id: "semicircle",
+    label: "semicircle",
+    chinese: "半圆",
+    category: "extra",
+    type: "semicircle",
+    description: "适合做彩虹、拱门、山丘、帽檐和太阳升起的形状。",
+  },
+  {
+    id: "trapezoid",
+    label: "trapezoid",
+    chinese: "梯形",
+    category: "extra",
+    type: "trapezoid",
+    description: "适合做花盆、屋顶、桌面、桥墩和建筑外轮廓。",
+  },
 ];
 
 const COLOR_OPTIONS = [
@@ -825,6 +841,10 @@ function getShapeMarkup(type, color) {
       return `<path class="shape-body" d="M 0 56 C -70 6 -102 -28 -80 -68 C -60 -104 -14 -96 0 -62 C 14 -96 60 -104 80 -68 C 102 -28 70 6 0 56 Z" fill="${color}"></path>`;
     case "hexagon":
       return `<polygon class="shape-body" points="${buildPolygonPoints(6, 66, -30)}" fill="${color}"></polygon>`;
+    case "semicircle":
+      return `<path class="shape-body" d="M -72 36 A 72 72 0 0 1 72 36 Z" fill="${color}"></path>`;
+    case "trapezoid":
+      return `<polygon class="shape-body" points="-74,48 74,48 42,-48 -42,-48" fill="${color}"></polygon>`;
     default:
       return `<circle class="shape-body" cx="0" cy="0" r="48" fill="${color}"></circle>`;
   }
