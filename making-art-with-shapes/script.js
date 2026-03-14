@@ -91,12 +91,13 @@ const BOARD_WIDTH = 980;
 const BOARD_HEIGHT = 680;
 const MIN_SCALE = 0.5;
 const MAX_SCALE = 2.8;
+const EDGE_PADDING = 40;
 
 const state = {
   instances: [],
   currentColor: COLOR_OPTIONS[0],
   selectedInstanceId: null,
-  drag: null,
+  gesture: null,
   zCounter: 0,
   spawnIndex: 0,
   instanceCounter: 0,
@@ -119,6 +120,9 @@ const selectedName = document.getElementById("selected-name");
 const selectedMeta = document.getElementById("selected-meta");
 const selectedColorDot = document.getElementById("selected-color-dot");
 const sizeSlider = document.getElementById("size-slider");
+const rotationSlider = document.getElementById("rotation-slider");
+const sizeValue = document.getElementById("size-value");
+const rotationValue = document.getElementById("rotation-value");
 
 init();
 
@@ -178,6 +182,17 @@ function bindEvents() {
     renderStats();
   });
 
+  rotationSlider.addEventListener("input", (event) => {
+    const instance = getSelectedInstance();
+    if (!instance) {
+      return;
+    }
+    instance.rotation = normalizeAngle(Number(event.target.value));
+    renderBoard();
+    renderInspector();
+    renderStats();
+  });
+
   boardSvg.addEventListener("pointerdown", (event) => {
     if (event.target.closest("[data-instance-id]")) {
       return;
@@ -215,12 +230,6 @@ function handleInspectorAction(action) {
     case "duplicate":
       duplicateSelectedShape();
       break;
-    case "bring-front":
-      bringSelectedToFront();
-      break;
-    case "center":
-      centerSelectedShape();
-      break;
     case "delete":
       deleteSelectedShape();
       break;
@@ -244,16 +253,16 @@ function handleKeyboardShortcuts(event) {
 
   switch (event.key) {
     case "ArrowUp":
-      instance.y = clamp(instance.y - movement, 40, BOARD_HEIGHT - 40);
+      instance.y = clamp(instance.y - movement, EDGE_PADDING, BOARD_HEIGHT - EDGE_PADDING);
       break;
     case "ArrowDown":
-      instance.y = clamp(instance.y + movement, 40, BOARD_HEIGHT - 40);
+      instance.y = clamp(instance.y + movement, EDGE_PADDING, BOARD_HEIGHT - EDGE_PADDING);
       break;
     case "ArrowLeft":
-      instance.x = clamp(instance.x - movement, 40, BOARD_WIDTH - 40);
+      instance.x = clamp(instance.x - movement, EDGE_PADDING, BOARD_WIDTH - EDGE_PADDING);
       break;
     case "ArrowRight":
-      instance.x = clamp(instance.x + movement, 40, BOARD_WIDTH - 40);
+      instance.x = clamp(instance.x + movement, EDGE_PADDING, BOARD_WIDTH - EDGE_PADDING);
       break;
     case "r":
     case "R":
@@ -346,7 +355,7 @@ function renderBoard() {
         `translate(${instance.x} ${instance.y}) rotate(${instance.rotation}) scale(${instance.scale})`,
       );
       group.innerHTML = getShapeMarkup(definition.type, instance.color);
-      group.addEventListener("pointerdown", startDraggingShape);
+      group.addEventListener("pointerdown", startShapeInteraction);
       shapeLayer.appendChild(group);
     });
 
@@ -364,14 +373,18 @@ function renderInspector() {
   }
 
   const definition = getShapeDefinition(instance.shapeId);
+  const angle = normalizeAngle(instance.rotation);
+  const scalePercent = Math.round(instance.scale * 100);
+
   selectedBadge.textContent = definition.label;
   selectedBadge.classList.remove("is-idle");
   selectedName.textContent = `${definition.label} · ${definition.chinese}`;
-  selectedMeta.textContent = `颜色：${instance.color.toUpperCase()} · 大小：${Math.round(
-    instance.scale * 100,
-  )}% · 角度：${normalizeAngle(instance.rotation)}°`;
+  selectedMeta.textContent = `颜色：${instance.color.toUpperCase()} · 大小：${scalePercent}% · 角度：${angle}°`;
   selectedColorDot.style.background = instance.color;
   sizeSlider.value = String(instance.scale);
+  rotationSlider.value = String(angle);
+  sizeValue.textContent = `${scalePercent}%`;
+  rotationValue.textContent = `${angle}°`;
   inspectorEmpty.hidden = true;
   inspectorCard.hidden = false;
 }
@@ -451,8 +464,8 @@ function duplicateSelectedShape() {
     ...instance,
     id: `shape-${state.instanceCounter}`,
     serial: state.instanceCounter,
-    x: clamp(instance.x + 34, 50, BOARD_WIDTH - 50),
-    y: clamp(instance.y + 34, 50, BOARD_HEIGHT - 50),
+    x: clamp(instance.x + 34, EDGE_PADDING, BOARD_WIDTH - EDGE_PADDING),
+    y: clamp(instance.y + 34, EDGE_PADDING, BOARD_HEIGHT - EDGE_PADDING),
     zIndex: nextZIndex(),
   };
 
@@ -472,27 +485,18 @@ function clearCanvas() {
   state.instances = [];
   state.selectedInstanceId = null;
   state.spawnIndex = 0;
+  clearGesture();
 }
 
 function scatterShapes() {
   state.instances.forEach((instance, index) => {
     const column = index % 4;
     const row = Math.floor(index / 4);
-    instance.x = 140 + column * 190 + (row % 2) * 22;
-    instance.y = 120 + row * 140 + (column % 2) * 18;
+    instance.x = 130 + column * 190 + (row % 2) * 18;
+    instance.y = 110 + row * 132 + (column % 2) * 14;
     instance.rotation = (index * 12) % 360;
     instance.zIndex = nextZIndex();
   });
-}
-
-function centerSelectedShape() {
-  const instance = getSelectedInstance();
-  if (!instance) {
-    return;
-  }
-  instance.x = BOARD_WIDTH / 2;
-  instance.y = BOARD_HEIGHT / 2;
-  instance.zIndex = nextZIndex();
 }
 
 function changeSelectedScale(delta) {
@@ -511,14 +515,6 @@ function changeSelectedRotation(delta) {
   instance.rotation = normalizeAngle(instance.rotation + delta);
 }
 
-function bringSelectedToFront() {
-  const instance = getSelectedInstance();
-  if (!instance) {
-    return;
-  }
-  instance.zIndex = nextZIndex();
-}
-
 function setCurrentColor(color, applyToSelection) {
   state.currentColor = color;
   if (applyToSelection) {
@@ -530,12 +526,11 @@ function setCurrentColor(color, applyToSelection) {
   renderAll();
 }
 
-function startDraggingShape(event) {
+function startShapeInteraction(event) {
   event.preventDefault();
   event.stopPropagation();
 
-  const target = event.currentTarget;
-  const instance = findInstance(target.dataset.instanceId);
+  const instance = findInstance(event.currentTarget.dataset.instanceId);
   if (!instance) {
     return;
   }
@@ -543,51 +538,146 @@ function startDraggingShape(event) {
   state.selectedInstanceId = instance.id;
   instance.zIndex = nextZIndex();
 
-  const startPoint = toSvgPoint(event.clientX, event.clientY);
-  state.drag = {
-    instanceId: instance.id,
-    pointerId: event.pointerId,
-    startX: startPoint.x,
-    startY: startPoint.y,
-    originX: instance.x,
-    originY: instance.y,
-  };
-
-  window.addEventListener("pointermove", dragPointerMove);
-  window.addEventListener("pointerup", finishDraggingShape);
-  renderAll();
-}
-
-function dragPointerMove(event) {
-  if (!state.drag || event.pointerId !== state.drag.pointerId) {
-    return;
+  if (!state.gesture || state.gesture.instanceId !== instance.id) {
+    clearGesture();
+    state.gesture = {
+      instanceId: instance.id,
+      pointers: new Map(),
+      mode: "drag",
+      originX: instance.x,
+      originY: instance.y,
+      originScale: instance.scale,
+      originRotation: instance.rotation,
+      startPointerX: 0,
+      startPointerY: 0,
+      startCenterX: 0,
+      startCenterY: 0,
+      startDistance: 0,
+      startAngle: 0,
+    };
+    window.addEventListener("pointermove", handleShapeGestureMove);
+    window.addEventListener("pointerup", finishShapeInteraction);
+    window.addEventListener("pointercancel", finishShapeInteraction);
   }
 
-  const instance = findInstance(state.drag.instanceId);
-  if (!instance) {
-    return;
-  }
-
-  const currentPoint = toSvgPoint(event.clientX, event.clientY);
-  const deltaX = currentPoint.x - state.drag.startX;
-  const deltaY = currentPoint.y - state.drag.startY;
-
-  instance.x = clamp(state.drag.originX + deltaX, 40, BOARD_WIDTH - 40);
-  instance.y = clamp(state.drag.originY + deltaY, 40, BOARD_HEIGHT - 40);
+  const point = toSvgPoint(event.clientX, event.clientY);
+  state.gesture.pointers.set(event.pointerId, point);
+  refreshGestureSnapshot(instance);
   renderBoard();
   renderInspector();
   renderStats();
 }
 
-function finishDraggingShape(event) {
-  if (!state.drag || event.pointerId !== state.drag.pointerId) {
+function handleShapeGestureMove(event) {
+  if (!state.gesture || !state.gesture.pointers.has(event.pointerId)) {
     return;
   }
 
-  state.drag = null;
-  window.removeEventListener("pointermove", dragPointerMove);
-  window.removeEventListener("pointerup", finishDraggingShape);
-  renderAll();
+  const instance = findInstance(state.gesture.instanceId);
+  if (!instance) {
+    clearGesture();
+    return;
+  }
+
+  const point = toSvgPoint(event.clientX, event.clientY);
+  state.gesture.pointers.set(event.pointerId, point);
+
+  if (state.gesture.pointers.size >= 2) {
+    applyTransformGesture(instance);
+  } else {
+    applyDragGesture(instance);
+  }
+
+  renderBoard();
+  renderInspector();
+  renderStats();
+}
+
+function finishShapeInteraction(event) {
+  if (!state.gesture) {
+    return;
+  }
+
+  state.gesture.pointers.delete(event.pointerId);
+  const instance = findInstance(state.gesture.instanceId);
+
+  if (!instance || state.gesture.pointers.size === 0) {
+    clearGesture();
+    renderAll();
+    return;
+  }
+
+  refreshGestureSnapshot(instance);
+  renderBoard();
+  renderInspector();
+  renderStats();
+}
+
+function refreshGestureSnapshot(instance) {
+  const pointers = Array.from(state.gesture.pointers.values());
+  state.gesture.originX = instance.x;
+  state.gesture.originY = instance.y;
+  state.gesture.originScale = instance.scale;
+  state.gesture.originRotation = instance.rotation;
+
+  if (pointers.length >= 2) {
+    const [first, second] = pointers;
+    const center = getMidpoint(first, second);
+    state.gesture.mode = "transform";
+    state.gesture.startCenterX = center.x;
+    state.gesture.startCenterY = center.y;
+    state.gesture.startDistance = Math.max(getDistance(first, second), 1);
+    state.gesture.startAngle = getAngle(first, second);
+    return;
+  }
+
+  const [point] = pointers;
+  state.gesture.mode = "drag";
+  state.gesture.startPointerX = point.x;
+  state.gesture.startPointerY = point.y;
+}
+
+function applyDragGesture(instance) {
+  const [point] = Array.from(state.gesture.pointers.values());
+  instance.x = clamp(
+    state.gesture.originX + (point.x - state.gesture.startPointerX),
+    EDGE_PADDING,
+    BOARD_WIDTH - EDGE_PADDING,
+  );
+  instance.y = clamp(
+    state.gesture.originY + (point.y - state.gesture.startPointerY),
+    EDGE_PADDING,
+    BOARD_HEIGHT - EDGE_PADDING,
+  );
+}
+
+function applyTransformGesture(instance) {
+  const [first, second] = Array.from(state.gesture.pointers.values());
+  const center = getMidpoint(first, second);
+  const distance = Math.max(getDistance(first, second), 1);
+  const angle = getAngle(first, second);
+  const distanceRatio = distance / state.gesture.startDistance;
+  const rotationDelta = getAngleDelta(angle, state.gesture.startAngle);
+
+  instance.x = clamp(
+    state.gesture.originX + (center.x - state.gesture.startCenterX),
+    EDGE_PADDING,
+    BOARD_WIDTH - EDGE_PADDING,
+  );
+  instance.y = clamp(
+    state.gesture.originY + (center.y - state.gesture.startCenterY),
+    EDGE_PADDING,
+    BOARD_HEIGHT - EDGE_PADDING,
+  );
+  instance.scale = clampScale(state.gesture.originScale * distanceRatio);
+  instance.rotation = normalizeAngle(state.gesture.originRotation + rotationDelta);
+}
+
+function clearGesture() {
+  state.gesture = null;
+  window.removeEventListener("pointermove", handleShapeGestureMove);
+  window.removeEventListener("pointerup", finishShapeInteraction);
+  window.removeEventListener("pointercancel", finishShapeInteraction);
 }
 
 function getShapeDefinition(shapeId) {
@@ -604,14 +694,14 @@ function findInstance(instanceId) {
 
 function getSpawnPoint(index) {
   const points = [
-    { x: 180, y: 150, rotation: 0 },
-    { x: 330, y: 170, rotation: 6 },
-    { x: 480, y: 160, rotation: -8 },
-    { x: 630, y: 180, rotation: 4 },
-    { x: 260, y: 320, rotation: -12 },
-    { x: 430, y: 330, rotation: 10 },
-    { x: 600, y: 320, rotation: -4 },
-    { x: 770, y: 180, rotation: 8 },
+    { x: 170, y: 140, rotation: 0 },
+    { x: 310, y: 150, rotation: 8 },
+    { x: 450, y: 145, rotation: -8 },
+    { x: 590, y: 160, rotation: 6 },
+    { x: 240, y: 290, rotation: -10 },
+    { x: 400, y: 300, rotation: 10 },
+    { x: 560, y: 295, rotation: -6 },
+    { x: 730, y: 180, rotation: 5 },
   ];
   return points[index % points.length];
 }
@@ -625,7 +715,37 @@ function toSvgPoint(clientX, clientY) {
   const point = boardSvg.createSVGPoint();
   point.x = clientX;
   point.y = clientY;
-  return point.matrixTransform(boardSvg.getScreenCTM().inverse());
+  const matrix = boardSvg.getScreenCTM();
+  if (!matrix) {
+    return { x: 0, y: 0 };
+  }
+  return point.matrixTransform(matrix.inverse());
+}
+
+function getMidpoint(first, second) {
+  return {
+    x: (first.x + second.x) / 2,
+    y: (first.y + second.y) / 2,
+  };
+}
+
+function getDistance(first, second) {
+  return Math.hypot(first.x - second.x, first.y - second.y);
+}
+
+function getAngle(first, second) {
+  return Math.atan2(second.y - first.y, second.x - first.x) * (180 / Math.PI);
+}
+
+function getAngleDelta(current, start) {
+  let delta = current - start;
+  while (delta > 180) {
+    delta -= 360;
+  }
+  while (delta < -180) {
+    delta += 360;
+  }
+  return delta;
 }
 
 function clampScale(value) {

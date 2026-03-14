@@ -6,7 +6,7 @@
     <title>Making Art with Shapes</title>
     <meta
       name="description"
-      content="一个适合课堂教学与 iPad 创作的图形应用，提供紧凑的第一屏图形选择区和更大的创作画布。"
+      content="一个适合课堂教学与 iPad 创作的图形应用，提供更大的创作画布、独立编辑区，以及触屏缩放旋转手势。"
     />
     <link rel="stylesheet" href="style.css" />
   </head>
@@ -15,10 +15,8 @@
       <header class="hero">
         <div class="hero-copy">
           <span class="eyebrow">Making Art with Shapes</span>
-          <h1>用图形快速创作</h1>
-          <p>
-            为 iPad 课堂创作做了紧凑布局优化：上方直接选图形和颜色，下方保留更大的创作区，让学生尽量在第一屏内完成选择与拼搭。
-          </p>
+          <h1>第一屏直接创作</h1>
+          <p>图形、颜色、编辑尽量集中在一屏里，画布更大，适合 iPad 课堂快速创作。</p>
         </div>
         <div class="hero-stats" aria-label="创作统计">
           <div class="stat-card">
@@ -38,11 +36,11 @@
 
       <main class="studio">
         <section class="workspace-card">
-          <div class="stage-top">
+          <div class="top-compact">
             <div class="stage-copy">
               <span class="panel-kicker">iPad Friendly Studio</span>
-              <h2>第一屏就开始创作</h2>
-              <p>添加图形 → 选颜色 → 拖进画布，尽量少滑动、少切换、更多创作。</p>
+              <h2>上方选图形，下方大画布创作</h2>
+              <p>单指拖动图形，双指可以直接缩放和旋转；右侧编辑区也能用鼠标精调大小和角度。</p>
             </div>
             <div class="toolbar">
               <button id="scatter-shapes" class="secondary-button" type="button">整理位置</button>
@@ -71,7 +69,7 @@
                 </div>
                 <span class="control-note">补充创意表达</span>
               </div>
-              <div id="extra-shape-list" class="shape-list extra-shape-list"></div>
+              <div id="extra-shape-list" class="shape-list"></div>
             </section>
 
             <section class="control-section color-section">
@@ -90,29 +88,32 @@
             </section>
           </div>
 
-          <div class="board-stage">
-            <div id="board" class="board">
-              <div id="board-empty" class="board-empty">
-                <span>从上方添加图形到这里，开始制作你的 shape art</span>
+          <div class="workspace-shell">
+            <div class="board-wrap">
+              <div class="gesture-tip">单指拖动 · 双指缩放 / 旋转</div>
+              <div id="board" class="board">
+                <div id="board-empty" class="board-empty">
+                  <span>从上方添加图形到这里，开始制作你的 shape art</span>
+                </div>
+                <svg
+                  id="board-svg"
+                  class="board-svg"
+                  viewBox="0 0 980 680"
+                  role="img"
+                  aria-label="图形创作区"
+                >
+                  <g id="shape-layer"></g>
+                </svg>
               </div>
-              <svg
-                id="board-svg"
-                class="board-svg"
-                viewBox="0 0 980 680"
-                role="img"
-                aria-label="图形创作区"
-              >
-                <g id="shape-layer"></g>
-              </svg>
             </div>
 
             <aside class="inspector" aria-live="polite">
               <div class="inspector-head">
-                <h3>当前图形</h3>
+                <h3>编辑区</h3>
                 <span id="selected-badge" class="selected-badge is-idle">未选择</span>
               </div>
               <div id="inspector-empty" class="selected-empty">
-                点击图形后，可缩放、旋转、复制、删除和改色。
+                先点击画布中的图形，再在这里用鼠标精调大小、角度、复制或删除。
               </div>
               <div id="inspector-card" class="selected-card" hidden>
                 <div class="selected-title-row">
@@ -123,10 +124,23 @@
                   <span id="selected-color-dot" class="color-dot" aria-hidden="true"></span>
                 </div>
 
-                <label class="size-control" for="size-slider">
-                  <span>大小调节</span>
+                <label class="range-control" for="size-slider">
+                  <div class="range-head">
+                    <span>大小</span>
+                    <strong id="size-value">100%</strong>
+                  </div>
                   <input id="size-slider" type="range" min="0.5" max="2.8" step="0.05" />
                 </label>
+
+                <label class="range-control" for="rotation-slider">
+                  <div class="range-head">
+                    <span>角度</span>
+                    <strong id="rotation-value">0°</strong>
+                  </div>
+                  <input id="rotation-slider" type="range" min="0" max="359" step="1" />
+                </label>
+
+                <p class="inspector-tip">提示：触屏可直接在画布中双指缩放和旋转；颜色请在上方颜色区切换。</p>
 
                 <div class="action-grid">
                   <button type="button" data-action="scale-down">缩小</button>
