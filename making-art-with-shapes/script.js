@@ -56,22 +56,6 @@ const SHAPE_DEFINITIONS = [
     description: "适合做风筝、花纹、鱼鳞和几何拼贴细节。",
   },
   {
-    id: "heart",
-    label: "heart",
-    chinese: "心形",
-    category: "extra",
-    type: "heart",
-    description: "适合做节日贺卡、图标和情感主题作品。",
-  },
-  {
-    id: "hexagon",
-    label: "hexagon",
-    chinese: "六边形",
-    category: "extra",
-    type: "hexagon",
-    description: "适合做蜂巢、徽章和科幻风格装饰。",
-  },
-  {
     id: "semicircle",
     label: "semicircle",
     chinese: "半圆",
@@ -86,6 +70,22 @@ const SHAPE_DEFINITIONS = [
     category: "extra",
     type: "trapezoid",
     description: "适合做花盆、屋顶、桌面、桥墩和建筑外轮廓。",
+  },
+  {
+    id: "heart",
+    label: "heart",
+    chinese: "心形",
+    category: "extra",
+    type: "heart",
+    description: "适合做节日贺卡、图标和情感主题作品。",
+  },
+  {
+    id: "hexagon",
+    label: "hexagon",
+    chinese: "六边形",
+    category: "extra",
+    type: "hexagon",
+    description: "适合做蜂巢、徽章和科幻风格装饰。",
   },
 ];
 
