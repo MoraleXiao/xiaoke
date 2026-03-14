@@ -653,7 +653,7 @@
             </p>
             <div class="hero-actions">
               <a class="button button-primary" href="#apps">查看全部应用</a>
-              <a class="button button-secondary" href="tangram-studio/">直接进入七巧板创作台</a>
+              <a class="button button-secondary" href="making-art-with-shapes/">直接进入 Making Art with Shapes</a>
             </div>
           </article>
 
@@ -721,16 +721,16 @@
               <span class="eyebrow">应用导航</span>
               <h2>当前可用的小应用</h2>
             </div>
-            <p>后续新增应用时，请同步更新本页卡片与 README 中的应用列表。</p>
+            <p>后续新增或修改应用时，请同步更新本页卡片、README.md 与 AGENTS.md 中的相关说明。</p>
           </div>
           <div id="apps-grid" class="apps-grid"></div>
         </section>
 
         <section class="maintenance panel" id="maintenance">
           <span class="eyebrow">维护说明</span>
-          <h2>新增应用时，记得同步维护这三处</h2>
+          <h2>处理应用后，记得同步维护这三处</h2>
           <p class="maintenance-copy">
-            为了保证 GitHub Pages 首页、仓库文档和应用入口始终一致，后续每新增、修改或下线一个应用，都要同步更新导航页和说明文档。
+            为了保证 GitHub Pages 首页、仓库文档和应用入口始终一致，后续每新增、修改或下线一个应用，都要同步更新导航页、README.md 和 AGENTS.md。
           </p>
           <div class="maintenance-grid">
             <div class="maintenance-item">
@@ -742,8 +742,8 @@
               <p>补充应用名称、目录、功能说明、Pages 路径和当前状态，便于仓库协作与检索。</p>
             </div>
             <div class="maintenance-item">
-              <strong>3. 核对路径</strong>
-              <p>确认链接、资源路径和目录结构都适配 GitHub Pages 子路径部署，再提交变更。</p>
+              <strong>3. 更新 AGENTS</strong>
+              <p>如果本次任务补充了新的维护要求、交付规则或目录约束，要同步写回根目录 <code>AGENTS.md</code>。</p>
             </div>
           </div>
         </section>
@@ -758,14 +758,14 @@
       // 新增应用时，请同步更新这里、README.md 和 AGENTS.md 中的相关说明。
       const apps = [
         {
-          name: "七巧板创作台",
-          slug: "tangram-studio/",
+          name: "Making Art with Shapes",
+          slug: "making-art-with-shapes/",
           status: "可用",
-          badge: "推荐课堂演示",
+          badge: "推荐课堂创作",
           summary:
-            "左侧选择七巧板组件和模板，右侧进行拖拽拼搭，支持旋转、翻面、模板吸附与一键示范。",
-          scene: "适合几何启蒙、空间想象训练、图形拼搭活动和课堂投屏演示。",
-          tags: ["拖拽拼搭", "模板示范", "吸附引导"]
+            "左侧分为核心图形与拓展图形，支持重复添加、自由配色、拖拽移动、旋转与放大缩小。",
+          scene: "适合图形词汇教学、创意绘画表达、节日主题拼贴和课堂投屏演示。",
+          tags: ["重复添加", "自由配色", "缩放创作"]
         }
       ];
 
