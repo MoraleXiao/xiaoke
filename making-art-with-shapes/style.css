@@ -336,6 +336,8 @@ button {
 
 .board-wrap {
   min-width: 0;
+  display: grid;
+  align-content: start;
 }
 
 .gesture-tip {
@@ -346,8 +348,11 @@ button {
 
 .board {
   position: relative;
-  height: clamp(460px, calc(100svh - 220px), 800px);
+  width: min(100%, calc((100svh - 220px) * 980 / 680));
+  max-width: 100%;
+  aspect-ratio: 980 / 680;
   min-height: 460px;
+  margin-inline: auto;
   overflow: hidden;
   border: 1px solid rgba(75, 99, 255, 0.12);
   border-radius: 28px;
@@ -562,7 +567,8 @@ button {
   }
 
   .board {
-    height: clamp(430px, calc(100svh - 235px), 720px);
+    width: min(100%, calc((100svh - 235px) * 980 / 680));
+    min-height: 430px;
   }
 }
 
@@ -578,7 +584,7 @@ button {
   }
 
   .board {
-    height: min(58vh, 520px);
+    width: 100%;
     min-height: 380px;
   }
 }

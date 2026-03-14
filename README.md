@@ -80,7 +80,7 @@
 
 | 应用名称 | 目录 | 功能说明 | Pages 路径 | 状态 |
 | --- | --- | --- | --- | --- |
-| Making Art with Shapes | `making-art-with-shapes/` | 支持宽高独立拉伸，可做扁三角形、细长矩形和粗短矩形；图形、颜色与编辑集中在一屏内，适合 iPad 课堂快速创作 | `https://moralexiao.github.io/xiaoke/making-art-with-shapes/` | 可用 |
+| Making Art with Shapes | `making-art-with-shapes/` | 支持宽高独立拉伸，创作画布按可见区域完整铺开，可做扁三角形、细长矩形和粗短矩形，适合 iPad 课堂快速创作 | `https://moralexiao.github.io/xiaoke/making-art-with-shapes/` | 可用 |
 
 ## 维护流程
 
