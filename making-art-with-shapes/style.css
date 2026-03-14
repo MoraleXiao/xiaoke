@@ -47,15 +47,15 @@ button {
 .app-shell {
   max-width: 1450px;
   margin: 0 auto;
-  padding: 12px 14px 18px;
+  padding: 10px 12px 14px;
 }
 
 .hero {
   display: grid;
   grid-template-columns: minmax(0, 1.5fr) minmax(260px, 0.9fr);
-  gap: 12px;
+  gap: 8px;
   align-items: center;
-  padding: 14px 16px;
+  padding: 10px 12px;
   border: 1px solid rgba(255, 255, 255, 0.58);
   border-radius: var(--radius-xl);
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.93), rgba(244, 247, 255, 0.86));
@@ -84,14 +84,14 @@ button {
 }
 
 .hero h1 {
-  font-size: clamp(1.8rem, 3.4vw, 2.7rem);
+  font-size: clamp(1.65rem, 3vw, 2.4rem);
 }
 
 .hero-copy p {
-  margin: 8px 0 0;
+  margin: 6px 0 0;
   max-width: 52ch;
   color: var(--muted);
-  font-size: 0.92rem;
+  font-size: 0.88rem;
   line-height: 1.55;
 }
 
@@ -102,8 +102,8 @@ button {
 }
 
 .stat-card {
-  min-height: 74px;
-  padding: 12px 14px;
+  min-height: 68px;
+  padding: 10px 12px;
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   background: rgba(255, 255, 255, 0.84);
@@ -122,11 +122,11 @@ button {
 }
 
 .studio {
-  margin-top: 10px;
+  margin-top: 6px;
 }
 
 .workspace-card {
-  padding: 12px;
+  padding: 10px;
   border: 1px solid rgba(255, 255, 255, 0.62);
   border-radius: var(--radius-xl);
   background: var(--surface);
@@ -142,12 +142,12 @@ button {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 10px;
+  gap: 8px;
 }
 
 .top-compact {
   align-items: flex-start;
-  margin-bottom: 10px;
+  margin-bottom: 6px;
 }
 
 .stage-copy p,
@@ -164,6 +164,10 @@ button {
 .selected-title-row p,
 .inspector-tip {
   margin: 6px 0 0;
+}
+
+.stage-copy {
+  max-width: 540px;
 }
 
 .toolbar {
@@ -213,13 +217,13 @@ button {
 
 .control-hub {
   display: grid;
-  grid-template-columns: 1.65fr 1.45fr 0.95fr;
-  gap: 10px;
-  margin-bottom: 10px;
+  grid-template-columns: 1.75fr 1.45fr 0.9fr;
+  gap: 8px;
+  margin-bottom: 6px;
 }
 
 .control-section {
-  padding: 12px;
+  padding: 10px;
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   background: rgba(255, 255, 255, 0.86);
@@ -236,17 +240,17 @@ button {
 
 .shape-list {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(64px, 1fr));
   gap: 8px;
-  margin-top: 8px;
+  margin-top: 6px;
 }
 
 .shape-card {
   display: grid;
   gap: 4px;
   width: 100%;
-  min-height: 90px;
-  padding: 8px 6px;
+  min-height: 78px;
+  padding: 7px 5px;
   border: 1px solid var(--border);
   border-radius: 16px;
   background: rgba(255, 255, 255, 0.98);
@@ -254,22 +258,22 @@ button {
 }
 
 .shape-preview {
-  width: 52px;
-  height: 42px;
+  width: 44px;
+  height: 34px;
   margin: 0 auto;
   display: grid;
   place-items: center;
 }
 
 .shape-label {
-  font-size: 0.82rem;
+  font-size: 0.78rem;
   font-weight: 700;
   line-height: 1.1;
 }
 
 .shape-sub {
   color: var(--muted);
-  font-size: 0.72rem;
+  font-size: 0.68rem;
   line-height: 1.1;
 }
 
@@ -277,7 +281,7 @@ button {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 8px;
-  margin-top: 8px;
+  margin-top: 6px;
 }
 
 .color-swatch {
@@ -306,8 +310,8 @@ button {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 10px;
-  margin-top: 8px;
+  gap: 8px;
+  margin-top: 6px;
   padding: 8px 10px;
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
@@ -316,8 +320,8 @@ button {
 }
 
 .color-picker-row input {
-  width: 48px;
-  height: 32px;
+  width: 42px;
+  height: 28px;
   padding: 0;
   border: 0;
   background: none;
@@ -325,8 +329,8 @@ button {
 
 .workspace-shell {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 290px;
-  gap: 12px;
+  grid-template-columns: minmax(0, 1fr) 270px;
+  gap: 8px;
   align-items: start;
 }
 
@@ -335,15 +339,15 @@ button {
 }
 
 .gesture-tip {
-  margin-bottom: 8px;
+  margin-bottom: 6px;
   color: var(--muted);
   font-size: 0.86rem;
 }
 
 .board {
   position: relative;
-  height: clamp(430px, calc(100svh - 255px), 760px);
-  min-height: 430px;
+  height: clamp(460px, calc(100svh - 220px), 800px);
+  min-height: 460px;
   overflow: hidden;
   border: 1px solid rgba(75, 99, 255, 0.12);
   border-radius: 28px;
@@ -429,7 +433,9 @@ button {
 }
 
 .inspector {
-  padding: 14px;
+  position: sticky;
+  top: 10px;
+  padding: 12px;
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   background: rgba(255, 255, 255, 0.92);
@@ -454,14 +460,14 @@ button {
 }
 
 .selected-empty {
-  margin-top: 10px;
+  margin-top: 6px;
   font-size: 0.9rem;
 }
 
 .selected-card {
   display: grid;
-  gap: 12px;
-  margin-top: 10px;
+  gap: 8px;
+  margin-top: 6px;
 }
 
 .selected-title-row {
@@ -485,7 +491,7 @@ button {
 }
 
 .range-head strong {
-  font-size: 0.92rem;
+  font-size: 0.88rem;
 }
 
 .range-control input {
@@ -552,11 +558,11 @@ button {
   }
 
   .workspace-shell {
-    grid-template-columns: minmax(0, 1fr) 250px;
+    grid-template-columns: minmax(0, 1fr) 236px;
   }
 
   .board {
-    height: clamp(400px, calc(100svh - 290px), 680px);
+    height: clamp(430px, calc(100svh - 235px), 720px);
   }
 }
 
