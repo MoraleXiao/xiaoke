@@ -112,7 +112,7 @@
                 <span id="selected-badge" class="selected-badge is-idle">未选择</span>
               </div>
               <div id="inspector-empty" class="selected-empty">
-                先点击画布中的图形，再在这里用鼠标精调大小、角度、复制或删除。
+                先点击画布中的图形，再在这里用鼠标精调宽度、高度、角度、复制或删除。
               </div>
               <div id="inspector-card" class="selected-card" hidden>
                 <div class="selected-title-row">
@@ -123,12 +123,20 @@
                   <span id="selected-color-dot" class="color-dot" aria-hidden="true"></span>
                 </div>
 
-                <label class="range-control" for="size-slider">
+                <label class="range-control" for="width-slider">
                   <div class="range-head">
-                    <span>大小</span>
-                    <strong id="size-value">100%</strong>
+                    <span>宽度</span>
+                    <strong id="width-value">100%</strong>
                   </div>
-                  <input id="size-slider" type="range" min="0.5" max="2.8" step="0.05" />
+                  <input id="width-slider" type="range" min="0.4" max="3.2" step="0.05" />
+                </label>
+
+                <label class="range-control" for="height-slider">
+                  <div class="range-head">
+                    <span>高度</span>
+                    <strong id="height-value">100%</strong>
+                  </div>
+                  <input id="height-slider" type="range" min="0.4" max="3.2" step="0.05" />
                 </label>
 
                 <label class="range-control" for="rotation-slider">
@@ -139,7 +147,7 @@
                   <input id="rotation-slider" type="range" min="0" max="359" step="1" />
                 </label>
 
-                <p class="inspector-tip">提示：触屏可直接在画布中双指缩放和旋转；颜色请在上方颜色区切换。</p>
+                <p class="inspector-tip">提示：双指手势仍是等比缩放；如果想做扁三角形、细长矩形或粗短矩形，请分别调整宽度和高度。</p>
 
                 <div class="action-grid">
                   <button type="button" data-action="scale-down">缩小</button>

@@ -89,8 +89,8 @@ const COLOR_OPTIONS = [
 const SVG_NS = "http://www.w3.org/2000/svg";
 const BOARD_WIDTH = 980;
 const BOARD_HEIGHT = 680;
-const MIN_SCALE = 0.5;
-const MAX_SCALE = 2.8;
+const MIN_SCALE = 0.4;
+const MAX_SCALE = 3.2;
 const EDGE_PADDING = 40;
 
 const state = {
@@ -119,9 +119,11 @@ const inspectorCard = document.getElementById("inspector-card");
 const selectedName = document.getElementById("selected-name");
 const selectedMeta = document.getElementById("selected-meta");
 const selectedColorDot = document.getElementById("selected-color-dot");
-const sizeSlider = document.getElementById("size-slider");
+const widthSlider = document.getElementById("width-slider");
+const heightSlider = document.getElementById("height-slider");
 const rotationSlider = document.getElementById("rotation-slider");
-const sizeValue = document.getElementById("size-value");
+const widthValue = document.getElementById("width-value");
+const heightValue = document.getElementById("height-value");
 const rotationValue = document.getElementById("rotation-value");
 
 init();
@@ -171,12 +173,23 @@ function bindEvents() {
     renderAll();
   });
 
-  sizeSlider.addEventListener("input", (event) => {
+  widthSlider.addEventListener("input", (event) => {
     const instance = getSelectedInstance();
     if (!instance) {
       return;
     }
-    instance.scale = clampScale(Number(event.target.value));
+    instance.scaleX = clampScale(Number(event.target.value));
+    renderBoard();
+    renderInspector();
+    renderStats();
+  });
+
+  heightSlider.addEventListener("input", (event) => {
+    const instance = getSelectedInstance();
+    if (!instance) {
+      return;
+    }
+    instance.scaleY = clampScale(Number(event.target.value));
     renderBoard();
     renderInspector();
     renderStats();
@@ -352,7 +365,7 @@ function renderBoard() {
       group.dataset.instanceId = instance.id;
       group.setAttribute(
         "transform",
-        `translate(${instance.x} ${instance.y}) rotate(${instance.rotation}) scale(${instance.scale})`,
+        `translate(${instance.x} ${instance.y}) rotate(${instance.rotation}) scale(${instance.scaleX} ${instance.scaleY})`,
       );
       group.innerHTML = getShapeMarkup(definition.type, instance.color);
       group.addEventListener("pointerdown", startShapeInteraction);
@@ -374,16 +387,19 @@ function renderInspector() {
 
   const definition = getShapeDefinition(instance.shapeId);
   const angle = normalizeAngle(instance.rotation);
-  const scalePercent = Math.round(instance.scale * 100);
+  const widthPercent = Math.round(instance.scaleX * 100);
+  const heightPercent = Math.round(instance.scaleY * 100);
 
   selectedBadge.textContent = definition.label;
   selectedBadge.classList.remove("is-idle");
   selectedName.textContent = `${definition.label} · ${definition.chinese}`;
-  selectedMeta.textContent = `颜色：${instance.color.toUpperCase()} · 大小：${scalePercent}% · 角度：${angle}°`;
+  selectedMeta.textContent = `颜色：${instance.color.toUpperCase()} · 宽：${widthPercent}% · 高：${heightPercent}% · 角度：${angle}°`;
   selectedColorDot.style.background = instance.color;
-  sizeSlider.value = String(instance.scale);
+  widthSlider.value = String(instance.scaleX);
+  heightSlider.value = String(instance.scaleY);
   rotationSlider.value = String(angle);
-  sizeValue.textContent = `${scalePercent}%`;
+  widthValue.textContent = `${widthPercent}%`;
+  heightValue.textContent = `${heightPercent}%`;
   rotationValue.textContent = `${angle}°`;
   inspectorEmpty.hidden = true;
   inspectorCard.hidden = false;
@@ -444,7 +460,8 @@ function addShape(shapeId) {
     x: spawnPoint.x,
     y: spawnPoint.y,
     rotation: spawnPoint.rotation,
-    scale: 1,
+    scaleX: 1,
+    scaleY: 1,
     color: state.currentColor,
     zIndex: nextZIndex(),
   };
@@ -504,7 +521,8 @@ function changeSelectedScale(delta) {
   if (!instance) {
     return;
   }
-  instance.scale = clampScale(instance.scale + delta);
+  instance.scaleX = clampScale(instance.scaleX + delta);
+  instance.scaleY = clampScale(instance.scaleY + delta);
 }
 
 function changeSelectedRotation(delta) {
@@ -546,7 +564,8 @@ function startShapeInteraction(event) {
       mode: "drag",
       originX: instance.x,
       originY: instance.y,
-      originScale: instance.scale,
+      originScaleX: instance.scaleX,
+      originScaleY: instance.scaleY,
       originRotation: instance.rotation,
       startPointerX: 0,
       startPointerY: 0,
@@ -617,7 +636,8 @@ function refreshGestureSnapshot(instance) {
   const pointers = Array.from(state.gesture.pointers.values());
   state.gesture.originX = instance.x;
   state.gesture.originY = instance.y;
-  state.gesture.originScale = instance.scale;
+  state.gesture.originScaleX = instance.scaleX;
+  state.gesture.originScaleY = instance.scaleY;
   state.gesture.originRotation = instance.rotation;
 
   if (pointers.length >= 2) {
@@ -669,7 +689,8 @@ function applyTransformGesture(instance) {
     EDGE_PADDING,
     BOARD_HEIGHT - EDGE_PADDING,
   );
-  instance.scale = clampScale(state.gesture.originScale * distanceRatio);
+  instance.scaleX = clampScale(state.gesture.originScaleX * distanceRatio);
+  instance.scaleY = clampScale(state.gesture.originScaleY * distanceRatio);
   instance.rotation = normalizeAngle(state.gesture.originRotation + rotationDelta);
 }
 
