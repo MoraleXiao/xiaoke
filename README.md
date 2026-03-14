@@ -69,7 +69,7 @@
 
 | 应用名称 | 目录 | 功能说明 | Pages 路径 | 状态 |
 | --- | --- | --- | --- | --- |
-| 七巧板创作台 | `tangram-studio/` | 左侧选择七巧板组件和模板，右侧进行拖拽拼搭，支持旋转、翻面、模板吸附与一键示范 | `https://moralexiao.github.io/xiaoke/tangram-studio/` | 可用 |
+| Making Art with Shapes | `making-art-with-shapes/` | 左侧分为核心图形与拓展图形，支持重复添加、自由配色、拖拽移动、旋转与放大缩小，方便学生进行图形创作 | `https://moralexiao.github.io/xiaoke/making-art-with-shapes/` | 可用 |
 
 ## 维护流程
 
