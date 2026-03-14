@@ -6,42 +6,31 @@
     <title>Making Art with Shapes</title>
     <meta
       name="description"
-      content="一个适合课堂教学与 iPad 创作的图形应用，提供更大的创作画布、独立编辑区，以及触屏缩放旋转手势。"
+      content="一个适合课堂教学与 iPad 创作的图形应用，采用横向铺满的极简首屏布局，提供更大的完整画布和可收起的编辑区。"
     />
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
     <div class="app-shell">
-      <header class="hero">
-        <div class="hero-copy">
-          <span class="eyebrow">Making Art with Shapes</span>
-          <h1>第一屏直接创作</h1>
-          <p>图形、颜色、编辑尽量集中在一屏里，让画布尽可能更大。</p>
-        </div>
-        <div class="hero-stats" aria-label="创作统计">
-          <div class="stat-card">
-            <strong id="shape-count">0</strong>
-            <span>画布图形</span>
-          </div>
-          <div class="stat-card">
-            <strong id="color-count">0</strong>
-            <span>已用颜色</span>
-          </div>
-          <div class="stat-card">
-            <strong id="selection-label">未选择</strong>
-            <span>当前对象</span>
-          </div>
-        </div>
-      </header>
-
       <main class="studio">
         <section class="workspace-card">
-          <div class="top-compact">
-            <div class="stage-copy">
-              <span class="panel-kicker">Quick Create</span>
-              <p>上方选图形和颜色，单指拖动，双指缩放旋转，右侧编辑区可精调。</p>
+          <div class="studio-bar">
+            <div class="studio-stats" aria-label="创作统计">
+              <div class="stat-pill">
+                <strong id="shape-count">0</strong>
+                <span>图形</span>
+              </div>
+              <div class="stat-pill">
+                <strong id="color-count">0</strong>
+                <span>颜色</span>
+              </div>
+              <div class="stat-pill selection-pill">
+                <strong id="selection-label">未选择</strong>
+                <span>当前对象</span>
+              </div>
             </div>
             <div class="toolbar">
+              <button id="toggle-inspector" class="secondary-button" type="button" aria-controls="inspector-panel" aria-expanded="false">打开编辑区</button>
               <button id="scatter-shapes" class="secondary-button" type="button">整理位置</button>
               <button id="duplicate-selected" class="secondary-button" type="button">复制当前</button>
               <button id="clear-canvas" class="primary-button" type="button">清空画布</button>
@@ -49,35 +38,26 @@
           </div>
 
           <div class="control-hub">
-            <section class="control-section control-section-wide">
+            <section class="control-section core-section">
               <div class="control-head">
-                <div>
-                  <span class="panel-kicker">Core Shapes</span>
-                  <h3>核心图形</h3>
-                </div>
-                <span class="control-note">课本 5 个词汇</span>
+                <h3>核心图形</h3>
+                <span class="control-note">5 个词汇</span>
               </div>
               <div id="core-shape-list" class="shape-list"></div>
             </section>
 
-            <section class="control-section control-section-wide">
+            <section class="control-section extra-section">
               <div class="control-head">
-                <div>
-                  <span class="panel-kicker">Extra Shapes</span>
-                  <h3>拓展图形</h3>
-                </div>
-                <span class="control-note">补充创意表达</span>
+                <h3>拓展图形</h3>
+                <span class="control-note">补充创意</span>
               </div>
               <div id="extra-shape-list" class="shape-list"></div>
             </section>
 
             <section class="control-section color-section">
               <div class="control-head">
-                <div>
-                  <span class="panel-kicker">Colors</span>
-                  <h3>颜色选择</h3>
-                </div>
-                <span class="control-note">选中图形后可直接改色</span>
+                <h3>颜色</h3>
+                <span class="control-note">选中后可改色</span>
               </div>
               <div id="palette" class="palette" aria-label="颜色面板"></div>
               <label class="color-picker-row" for="custom-color">
@@ -87,79 +67,76 @@
             </section>
           </div>
 
-          <div class="workspace-shell">
-            <div class="board-wrap">
-              <div class="gesture-tip">单指拖动 · 双指缩放 / 旋转 · 画布区域已完整铺开</div>
-              <div id="board" class="board">
-                <div id="board-empty" class="board-empty">
-                  <span>从上方添加图形到这里，开始制作你的 shape art</span>
+          <div class="board-wrap">
+            <div id="board" class="board">
+              <div id="board-empty" class="board-empty">
+                <span>从上方选择图形后，直接在这里创作</span>
+              </div>
+              <svg
+                id="board-svg"
+                class="board-svg"
+                viewBox="0 0 1320 680"
+                role="img"
+                aria-label="图形创作区"
+              >
+                <g id="shape-layer"></g>
+              </svg>
+            </div>
+          </div>
+
+          <aside id="inspector-panel" class="inspector" aria-live="polite" hidden>
+            <div class="inspector-head">
+              <h3>编辑区</h3>
+              <span id="selected-badge" class="selected-badge is-idle">未选择</span>
+            </div>
+            <div id="inspector-empty" class="selected-empty">
+              先点击画布中的图形，再在这里用鼠标精调宽度、高度、角度、复制或删除。
+            </div>
+            <div id="inspector-card" class="selected-card" hidden>
+              <div class="selected-title-row">
+                <div>
+                  <strong id="selected-name"></strong>
+                  <p id="selected-meta"></p>
                 </div>
-                <svg
-                  id="board-svg"
-                  class="board-svg"
-                  viewBox="0 0 980 680"
-                  role="img"
-                  aria-label="图形创作区"
-                >
-                  <g id="shape-layer"></g>
-                </svg>
+                <span id="selected-color-dot" class="color-dot" aria-hidden="true"></span>
+              </div>
+
+              <label class="range-control" for="width-slider">
+                <div class="range-head">
+                  <span>宽度</span>
+                  <strong id="width-value">100%</strong>
+                </div>
+                <input id="width-slider" type="range" min="0.4" max="3.2" step="0.05" />
+              </label>
+
+              <label class="range-control" for="height-slider">
+                <div class="range-head">
+                  <span>高度</span>
+                  <strong id="height-value">100%</strong>
+                </div>
+                <input id="height-slider" type="range" min="0.4" max="3.2" step="0.05" />
+              </label>
+
+              <label class="range-control" for="rotation-slider">
+                <div class="range-head">
+                  <span>角度</span>
+                  <strong id="rotation-value">0°</strong>
+                </div>
+                <input id="rotation-slider" type="range" min="0" max="359" step="1" />
+              </label>
+
+              <p class="inspector-tip">提示：双指手势仍是等比缩放；如果想做扁三角形、细长矩形或粗短矩形，请分别调整宽度和高度。</p>
+
+              <div class="action-grid">
+                <button type="button" data-action="scale-down">缩小</button>
+                <button type="button" data-action="scale-up">放大</button>
+                <button type="button" data-action="rotate-left">左转</button>
+                <button type="button" data-action="rotate-right">右转</button>
+                <button type="button" data-action="duplicate">复制</button>
+                <button type="button" data-action="delete">删除</button>
               </div>
             </div>
-
-            <aside class="inspector" aria-live="polite">
-              <div class="inspector-head">
-                <h3>编辑区</h3>
-                <span id="selected-badge" class="selected-badge is-idle">未选择</span>
-              </div>
-              <div id="inspector-empty" class="selected-empty">
-                先点击画布中的图形，再在这里用鼠标精调宽度、高度、角度、复制或删除。
-              </div>
-              <div id="inspector-card" class="selected-card" hidden>
-                <div class="selected-title-row">
-                  <div>
-                    <strong id="selected-name"></strong>
-                    <p id="selected-meta"></p>
-                  </div>
-                  <span id="selected-color-dot" class="color-dot" aria-hidden="true"></span>
-                </div>
-
-                <label class="range-control" for="width-slider">
-                  <div class="range-head">
-                    <span>宽度</span>
-                    <strong id="width-value">100%</strong>
-                  </div>
-                  <input id="width-slider" type="range" min="0.4" max="3.2" step="0.05" />
-                </label>
-
-                <label class="range-control" for="height-slider">
-                  <div class="range-head">
-                    <span>高度</span>
-                    <strong id="height-value">100%</strong>
-                  </div>
-                  <input id="height-slider" type="range" min="0.4" max="3.2" step="0.05" />
-                </label>
-
-                <label class="range-control" for="rotation-slider">
-                  <div class="range-head">
-                    <span>角度</span>
-                    <strong id="rotation-value">0°</strong>
-                  </div>
-                  <input id="rotation-slider" type="range" min="0" max="359" step="1" />
-                </label>
-
-                <p class="inspector-tip">提示：双指手势仍是等比缩放；如果想做扁三角形、细长矩形或粗短矩形，请分别调整宽度和高度。</p>
-
-                <div class="action-grid">
-                  <button type="button" data-action="scale-down">缩小</button>
-                  <button type="button" data-action="scale-up">放大</button>
-                  <button type="button" data-action="rotate-left">左转</button>
-                  <button type="button" data-action="rotate-right">右转</button>
-                  <button type="button" data-action="duplicate">复制</button>
-                  <button type="button" data-action="delete">删除</button>
-                </div>
-              </div>
-            </aside>
-          </div>
+          </aside>
         </section>
       </main>
     </div>

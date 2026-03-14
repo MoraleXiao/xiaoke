@@ -87,17 +87,18 @@ const COLOR_OPTIONS = [
 ];
 
 const SVG_NS = "http://www.w3.org/2000/svg";
-const BOARD_WIDTH = 980;
+const BOARD_WIDTH = 1320;
 const BOARD_HEIGHT = 680;
 const MIN_SCALE = 0.4;
 const MAX_SCALE = 3.2;
-const EDGE_PADDING = 40;
+const EDGE_PADDING = 24;
 
 const state = {
   instances: [],
   currentColor: COLOR_OPTIONS[0],
   selectedInstanceId: null,
   gesture: null,
+  inspectorOpen: false,
   zCounter: 0,
   spawnIndex: 0,
   instanceCounter: 0,
@@ -113,6 +114,8 @@ const boardEmpty = document.getElementById("board-empty");
 const shapeCount = document.getElementById("shape-count");
 const colorCount = document.getElementById("color-count");
 const selectionLabel = document.getElementById("selection-label");
+const toggleInspectorButton = document.getElementById("toggle-inspector");
+const inspectorPanel = document.getElementById("inspector-panel");
 const selectedBadge = document.getElementById("selected-badge");
 const inspectorEmpty = document.getElementById("inspector-empty");
 const inspectorCard = document.getElementById("inspector-card");
@@ -162,6 +165,11 @@ function bindEvents() {
   document.getElementById("clear-canvas").addEventListener("click", () => {
     clearCanvas();
     renderAll();
+  });
+
+  toggleInspectorButton.addEventListener("click", () => {
+    state.inspectorOpen = !state.inspectorOpen;
+    renderInspectorVisibility();
   });
 
   inspectorCard.addEventListener("click", (event) => {
@@ -312,6 +320,7 @@ function renderAll() {
   renderShapeLibraries();
   renderPalette();
   renderBoard();
+  renderInspectorVisibility();
   renderInspector();
   renderStats();
 }
@@ -341,6 +350,12 @@ function renderPalette() {
   }).join("");
 
   customColorInput.value = state.currentColor;
+}
+
+function renderInspectorVisibility() {
+  inspectorPanel.hidden = !state.inspectorOpen;
+  toggleInspectorButton.textContent = state.inspectorOpen ? "收起编辑区" : "打开编辑区";
+  toggleInspectorButton.setAttribute("aria-expanded", String(state.inspectorOpen));
 }
 
 function renderBoard() {
@@ -506,12 +521,15 @@ function clearCanvas() {
 }
 
 function scatterShapes() {
+  const columns = Math.min(6, Math.max(4, Math.ceil(Math.sqrt(state.instances.length || 1))));
+  const horizontalStep = columns === 1 ? 0 : (BOARD_WIDTH - 200) / (columns - 1);
+
   state.instances.forEach((instance, index) => {
-    const column = index % 4;
-    const row = Math.floor(index / 4);
-    instance.x = 130 + column * 190 + (row % 2) * 18;
-    instance.y = 110 + row * 132 + (column % 2) * 14;
-    instance.rotation = (index * 12) % 360;
+    const column = index % columns;
+    const row = Math.floor(index / columns);
+    instance.x = clamp(100 + column * horizontalStep, EDGE_PADDING, BOARD_WIDTH - EDGE_PADDING);
+    instance.y = clamp(116 + row * 120 + (column % 2) * 10, EDGE_PADDING, BOARD_HEIGHT - EDGE_PADDING);
+    instance.rotation = (index * 10) % 360;
     instance.zIndex = nextZIndex();
   });
 }
@@ -715,14 +733,18 @@ function findInstance(instanceId) {
 
 function getSpawnPoint(index) {
   const points = [
-    { x: 170, y: 140, rotation: 0 },
-    { x: 310, y: 150, rotation: 8 },
-    { x: 450, y: 145, rotation: -8 },
-    { x: 590, y: 160, rotation: 6 },
-    { x: 240, y: 290, rotation: -10 },
-    { x: 400, y: 300, rotation: 10 },
-    { x: 560, y: 295, rotation: -6 },
-    { x: 730, y: 180, rotation: 5 },
+    { x: 150, y: 144, rotation: 0 },
+    { x: 300, y: 152, rotation: 8 },
+    { x: 460, y: 146, rotation: -8 },
+    { x: 620, y: 160, rotation: 6 },
+    { x: 780, y: 150, rotation: -6 },
+    { x: 940, y: 164, rotation: 10 },
+    { x: 1100, y: 150, rotation: -10 },
+    { x: 230, y: 312, rotation: 5 },
+    { x: 470, y: 300, rotation: -8 },
+    { x: 710, y: 312, rotation: 8 },
+    { x: 950, y: 300, rotation: -6 },
+    { x: 1170, y: 314, rotation: 6 },
   ];
   return points[index % points.length];
 }
