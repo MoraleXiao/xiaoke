@@ -98,7 +98,7 @@ const state = {
   currentColor: COLOR_OPTIONS[0],
   selectedInstanceId: null,
   gesture: null,
-  inspectorOpen: false,
+  inspectorOpen: true,
   zCounter: 0,
   spawnIndex: 0,
   instanceCounter: 0,
@@ -109,6 +109,7 @@ const extraShapeList = document.getElementById("extra-shape-list");
 const palette = document.getElementById("palette");
 const customColorInput = document.getElementById("custom-color");
 const boardSvg = document.getElementById("board-svg");
+const stageLayout = document.getElementById("stage-layout");
 const shapeLayer = document.getElementById("shape-layer");
 const boardEmpty = document.getElementById("board-empty");
 const shapeCount = document.getElementById("shape-count");
@@ -354,6 +355,7 @@ function renderPalette() {
 
 function renderInspectorVisibility() {
   inspectorPanel.hidden = !state.inspectorOpen;
+  stageLayout.classList.toggle("is-inspector-open", state.inspectorOpen);
   toggleInspectorButton.textContent = state.inspectorOpen ? "收起编辑区" : "打开编辑区";
   toggleInspectorButton.setAttribute("aria-expanded", String(state.inspectorOpen));
 }

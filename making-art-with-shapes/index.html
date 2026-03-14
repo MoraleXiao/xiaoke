@@ -6,7 +6,7 @@
     <title>Making Art with Shapes</title>
     <meta
       name="description"
-      content="一个适合课堂教学与 iPad 创作的图形应用，采用横向铺满的极简首屏布局，提供更大的完整画布和可收起的编辑区。"
+      content="一个适合课堂教学与 iPad 创作的图形应用，采用画布左侧最大化、右侧可收起编辑区的极简首屏布局。"
     />
     <link rel="stylesheet" href="style.css" />
   </head>
@@ -30,7 +30,7 @@
               </div>
             </div>
             <div class="toolbar">
-              <button id="toggle-inspector" class="secondary-button" type="button" aria-controls="inspector-panel" aria-expanded="false">打开编辑区</button>
+              <button id="toggle-inspector" class="secondary-button" type="button" aria-controls="inspector-panel" aria-expanded="true">收起编辑区</button>
               <button id="scatter-shapes" class="secondary-button" type="button">整理位置</button>
               <button id="duplicate-selected" class="secondary-button" type="button">复制当前</button>
               <button id="clear-canvas" class="primary-button" type="button">清空画布</button>
@@ -67,24 +67,25 @@
             </section>
           </div>
 
-          <div class="board-wrap">
-            <div id="board" class="board">
-              <div id="board-empty" class="board-empty">
-                <span>从上方选择图形后，直接在这里创作</span>
+          <div id="stage-layout" class="stage-layout is-inspector-open">
+            <div class="board-wrap">
+              <div id="board" class="board">
+                <div id="board-empty" class="board-empty">
+                  <span>从上方选择图形后，直接在这里创作</span>
+                </div>
+                <svg
+                  id="board-svg"
+                  class="board-svg"
+                  viewBox="0 0 1320 680"
+                  role="img"
+                  aria-label="图形创作区"
+                >
+                  <g id="shape-layer"></g>
+                </svg>
               </div>
-              <svg
-                id="board-svg"
-                class="board-svg"
-                viewBox="0 0 1320 680"
-                role="img"
-                aria-label="图形创作区"
-              >
-                <g id="shape-layer"></g>
-              </svg>
             </div>
-          </div>
 
-          <aside id="inspector-panel" class="inspector" aria-live="polite" hidden>
+            <aside id="inspector-panel" class="inspector" aria-live="polite">
             <div class="inspector-head">
               <h3>编辑区</h3>
               <span id="selected-badge" class="selected-badge is-idle">未选择</span>
@@ -136,7 +137,8 @@
                 <button type="button" data-action="delete">删除</button>
               </div>
             </div>
-          </aside>
+            </aside>
+          </div>
         </section>
       </main>
     </div>
